@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Production rule: use Firebase Auth and user-owned paths.
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Hackathon-only fallback:
+    // If you are not using Auth during the demo, temporarily use a locked demo path
+    // and remove before public release.
+    match /demoUsers/{demoUserId}/{document=**} {
+      allow read, write: if demoUserId == "demo-user";
+    }
+  }
+}
