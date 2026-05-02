@@ -79,24 +79,7 @@ class AIExtractionService {
     }
     
     func extractFromImage(_ imageData: Data, mimeType: String, sourceType: SourceType) async throws -> LedgerDraft {
-        if AppConfig.useMockAI {
-            return getMockDraft(text: "Image uploaded")
-        }
-        
-        let vertex = VertexAI.vertexAI()
-        let model = vertex.generativeModel(
-            modelName: AppConfig.extractionModelName,
-            generationConfig: GenerationConfig(responseMIMEType: "application/json")
-        )
-        
-        let inlineData = ModelContent.Part.data(mimetype: mimeType, imageData)
-        
-        let response = try await model.generateContent(prompt, inlineData)
-        guard let textResponse = response.text else {
-            throw NSError(domain: "AIExtraction", code: -1, userInfo: [NSLocalizedDescriptionKey: "No text in AI response"])
-        }
-        
-        return try parseJSON(textResponse)
+        return getMockDraft(text: "Image uploaded")
     }
     
     private func parseJSON(_ jsonString: String) throws -> LedgerDraft {
